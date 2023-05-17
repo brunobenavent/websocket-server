@@ -17,6 +17,10 @@ class Server{
         
         //Rutas de mi app
         this.routes();
+
+        //Sockets
+        this.sockets();
+         
     }
     
     middlewares(){
@@ -31,6 +35,24 @@ class Server{
 
     routes(){
         //this.app.use(this.paths.auth, require('../routes/auth'))
+    }
+
+    //Sockets
+    sockets(){
+        this.io.on("connection", (socket) => {
+            console.log('cliente conectado', socket.id)
+            socket.on('disconnect', ()=>{
+                // console.log('cliente desconectado')
+            })
+
+            socket.on('enviar-mensaje', (payload, callback) =>{
+                // console.log(payload)
+                const id = 123456
+                callback({id, fecha: new Date().getTime()})
+                this.io.emit('enviar-mensaje', payload)
+            })
+            
+        })
     }
 
 
